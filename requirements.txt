@@ -1,0 +1,22 @@
+# Core Framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+
+# Database & ORM
+SQLAlchemy==2.0.34
+asyncpg==0.29.0
+geoalchemy2==0.14.6
+databases[postgresql]==0.9.0
+alembic==1.13.2  # for migrations (optional)
+
+# Messaging
+paho-mqtt==1.6.1
+
+# Utilities
+python-dotenv==1.0.1
+pydantic==2.8.2
+loguru==0.7.2
+python-dateutil==2.9.0.post0
+
+# Optional tools
+pytest==8.3.3
