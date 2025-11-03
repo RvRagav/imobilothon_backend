@@ -1,19 +1,29 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import DATABASE_URL
 
-# For Supabase, your DATABASE_URL should look like:
-# postgresql+asyncpg://user:password@db.supabase.co:5432/postgres
+# Synchronous engine using psycopg2-compatible URL (e.g. postgresql://user:pwd@host:port/dbname)
+engine = create_engine(DATABASE_URL, echo=True)
 
-engine = create_async_engine(DATABASE_URL, echo=True)
-
-AsyncSessionLocal = sessionmaker(
+SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine,
-    class_=AsyncSession
+    class_=Session,
+    expire_on_commit=False,
 )
 
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+
+def get_db():
+    """Dependency for FastAPI that yields a synchronous SQLAlchemy Session.
+
+    Note: Using sync DB sessions inside async endpoints will run in the threadpool
+    and may block if used heavily. Prefer async engine (`AsyncSession`) for high
+    throughput async apps. This change only updates the DB helper to use a
+    synchronous engine because your DATABASE_URL is psycopg2-based.
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
