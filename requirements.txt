@@ -8,6 +8,7 @@ asyncpg==0.29.0
 geoalchemy2==0.14.6
 databases[postgresql]==0.9.0
 alembic==1.13.2  # for migrations (optional)
+psycopg2-binary==2.9.9
 
 # Messaging
 paho-mqtt==1.6.1
